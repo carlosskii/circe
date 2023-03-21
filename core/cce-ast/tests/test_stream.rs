@@ -24,3 +24,12 @@ fn test_input_stream() {
   let next_char: char = stream.peek().unwrap().unwrap();
   assert_eq!(next_char, 'o');
 }
+
+#[test]
+fn test_input_stream_none() {
+  let contents: Cursor<&[u8]> = Cursor::new(b"");
+  let mut stream = InputStream::new(Box::new(contents));
+
+  let next_char: Option<char> = stream.next().unwrap();
+  assert_eq!(next_char, None);
+}

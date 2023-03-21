@@ -109,6 +109,10 @@ impl Parser {
               '-' => {
                 break;
               },
+              '.' => {
+                self.lexer.next()?;
+                break;
+              },
               _ => {
                 return Err(ParserError::SyntaxError("Expected '|'".to_string()));
               }
@@ -218,7 +222,12 @@ impl Parser {
       return Ok(peeked);
     }
 
-    let token: Token = self.lexer.peek()?.ok_or(ParserError::LexerError(LexerError::UnexpectedEndOfStream))?;
+    let token: Token = match self.lexer.peek()? {
+      Some(tok) => tok,
+      None => {
+        return Ok(None);
+      }
+    };
 
     match token {
       Token::Keyword(kw) => {

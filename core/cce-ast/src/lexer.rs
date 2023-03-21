@@ -109,7 +109,7 @@ impl Lexer {
         self.stream.next()?;
         Ok(Some(self.create_string_literal()?))
       },
-      '-' | '|' => {
+      '-' | '|' | '.' => {
         self.stream.next()?;
         Ok(Some(Token::Punctuation(c)))
       },

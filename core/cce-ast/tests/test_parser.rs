@@ -21,6 +21,23 @@ fn test_parser_basic() {
 }
 
 #[test]
+fn test_parser_literal() {
+  let contents: Cursor<&[u8]> = Cursor::new(b"say 'hello world'");
+  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+
+  let next_node: ParseNode = parser.next().unwrap().unwrap();
+  let expected_node: ParseNode = ParseNode::Command(Command {
+    components: vec![
+      CommandComponent::Keyword("say".to_string()),
+      CommandComponent::Literal("hello world".to_string())
+    ],
+    modifiers: vec![]
+  });
+
+  assert_eq!(next_node, expected_node);
+}
+
+#[test]
 fn test_parser_modifier() {
   let contents: Cursor<&[u8]> = Cursor::new(b"say hello world | say hello world");
   let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
@@ -214,6 +231,42 @@ fn test_parser_whatis_multiple() {
           CommandComponent::Keyword("the".to_string()),
           CommandComponent::Keyword("solar".to_string()),
           CommandComponent::Keyword("system".to_string())
+        ],
+        modifiers: vec![]
+      }
+    ]
+  });
+
+  assert_eq!(next_node, expected_node);
+}
+
+#[test]
+fn test_parser_howto_multiple_nomod() {
+  let contents: Cursor<&[u8]> = Cursor::new(b"howto say hello world - say hello world - say hello world again");
+  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+
+  let next_node: ParseNode = parser.next().unwrap().unwrap();
+  let expected_node: ParseNode = ParseNode::HowToStatement(HowToStatement {
+    signature: vec![
+      CommandComponent::Keyword("say".to_string()),
+      CommandComponent::Keyword("hello".to_string()),
+      CommandComponent::Keyword("world".to_string())
+    ],
+    body: vec![
+      Command {
+        components: vec![
+          CommandComponent::Keyword("say".to_string()),
+          CommandComponent::Keyword("hello".to_string()),
+          CommandComponent::Keyword("world".to_string())
+        ],
+        modifiers: vec![]
+      },
+      Command {
+        components: vec![
+          CommandComponent::Keyword("say".to_string()),
+          CommandComponent::Keyword("hello".to_string()),
+          CommandComponent::Keyword("world".to_string()),
+          CommandComponent::Keyword("again".to_string())
         ],
         modifiers: vec![]
       }
