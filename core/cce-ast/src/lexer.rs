@@ -17,7 +17,7 @@ pub enum Token {
 
 #[derive(Error, Debug)]
 pub enum LexerError {
-  #[error("InputStreamError: {0}")]
+  #[error("{0}")]
   InputStreamError(#[from] crate::stream::InputStreamError),
   #[error("Unexpected end of stream")]
   UnexpectedEndOfStream,
@@ -82,12 +82,19 @@ impl Lexer {
     Ok(Token::Literal(literal))
   }
 
-  pub fn next(&mut self) -> Result<Token, LexerError> {
-    if let Some(token) = self.peeked.take() {
-      return Ok(token);
+  pub fn next(&mut self) -> Result<Option<Token>, LexerError> {
+    if self.peeked.is_some() {
+      let tok = self.peeked.clone();
+      self.peeked = None;
+      return Ok(tok);
     };
 
-    let mut c: char = self.stream.peek()?.ok_or(LexerError::UnexpectedEndOfStream)?;
+    let mut c: char = match self.stream.peek()? {
+      Some(c) => c,
+      None => {
+        return Ok(None)
+      }
+    };
 
     while c.is_whitespace() {
       self.stream.next()?;
@@ -96,15 +103,15 @@ impl Lexer {
 
     match c {
       'a'..='z' | 'A'..='Z' | '_' => {
-        self.create_ident_or_keyword()
+        Ok(Some(self.create_ident_or_keyword()?))
       },
       '\'' => {
         self.stream.next()?;
-        self.create_string_literal()
+        Ok(Some(self.create_string_literal()?))
       },
       '-' | '|' => {
         self.stream.next()?;
-        Ok(Token::Punctuation(c))
+        Ok(Some(Token::Punctuation(c)))
       },
       _ => {
         Err(LexerError::UnexpectedCharacter(c))
@@ -114,7 +121,7 @@ impl Lexer {
 
   pub fn peek(&mut self) -> Result<Option<Token>, LexerError> {
     if self.peeked.is_none() {
-      self.peeked = Some(self.next()?);
+      self.peeked = self.next()?;
     };
 
     Ok(self.peeked.clone())

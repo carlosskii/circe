@@ -2,7 +2,7 @@ use cce_ast::InputStream;
 use std::io::Cursor;
 
 #[test]
-fn test_stream() {
+fn test_input_stream() {
   let contents: Cursor<&[u8]> = Cursor::new(b"Hello, world!");
   let mut stream = InputStream::new(Box::new(contents));
 
