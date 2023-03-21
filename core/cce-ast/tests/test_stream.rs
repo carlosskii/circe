@@ -11,4 +11,16 @@ fn test_stream() {
 
   let next_char: char = stream.next().unwrap().unwrap();
   assert_eq!(next_char, 'e');
+
+  let next_char: char = stream.peek().unwrap().unwrap();
+  assert_eq!(next_char, 'l');
+
+  let next_char: char = stream.next().unwrap().unwrap();
+  assert_eq!(next_char, 'l');
+
+  let next_char: char = stream.next().unwrap().unwrap();
+  assert_eq!(next_char, 'l');
+
+  let next_char: char = stream.peek().unwrap().unwrap();
+  assert_eq!(next_char, 'o');
 }

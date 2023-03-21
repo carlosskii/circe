@@ -69,7 +69,7 @@ impl InputStream {
     // Shift buffer
     self.buf_len -= char_len;
     self.buf = [0; 4];
-    self.buf[..self.buf_len].copy_from_slice(&char_buf[char_len..]);
+    self.buf[..4-char_len].copy_from_slice(&char_buf[char_len..]);
 
     Ok(Some(c))
   }
@@ -98,6 +98,8 @@ impl InputStream {
   }
 
   pub fn peek(&mut self) -> Result<Option<char>, InputStreamError> {
+    if self.peeked.is_some() { return Ok(self.peeked) };
+
     let c = self.get_next_char()?;
     match c {
       Some(c) => {
