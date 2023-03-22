@@ -1,0 +1,17 @@
+
+whatis the %OBJECT
+-[
+
+%OBJECT.0
+
+-]
+
+whatis %OBJECT of %OBJECT
+-[
+
+%OBJECT.1::%OBJECT.0
+
+-]
+
+
+the 'proof' of the 'pudding'
