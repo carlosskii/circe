@@ -43,7 +43,10 @@ impl Lexer {
     while c.is_alphanumeric() {
       ident.push(c);
       self.stream.next()?;
-      c = self.stream.peek()?.ok_or(LexerError::UnexpectedEndOfInput)?;
+      c = match self.stream.peek()? {
+        Some(c) => c,
+        None => break
+      };
     }
 
     Ok(ident)
@@ -56,7 +59,10 @@ impl Lexer {
     while c.is_numeric() {
       literal.push(c);
       self.stream.next()?;
-      c = self.stream.peek()?.ok_or(LexerError::UnexpectedEndOfInput)?;
+      c = match self.stream.peek()? {
+        Some(c) => c,
+        None => break
+      };
     }
 
     Ok(literal)
