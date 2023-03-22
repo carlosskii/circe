@@ -1,0 +1,28 @@
+print 'Hello, world!' to the console.
+
+howto print a string to the console
+- write the string to stdout
+- add a newline.
+
+whatis stdout
+- the standard output stream
+| file descriptor '1'.
+
+whatis a file descriptor
+- a number that refers to a file.
+
+whatis a newline
+- a character that indicates the end of a line
+| byte '0x0a'.
+
+
+howto write a string to a file descriptor
+-*
+
+< run the 'write' system call
+| the first argument is the file descriptor
+| the second argument is a pointer to the string data
+| the third argument is the length of the string
+>
+
+-*.

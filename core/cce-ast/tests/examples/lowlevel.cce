@@ -4,10 +4,10 @@ write 'Hello, world!' to stdout.
 howto write a string to a file descriptor
 -*
 
-@SYSREG0 = 1
-@SYSREG1 = < the number of the file descriptor >
-@SYSREG2 = < a pointer to the bytes of the string >
-@SYSREG3 = < the length of the string >
-SYSCALL
+< run the 'write' system call
+| the first argument is the file descriptor
+| the second argument is a pointer to the string data
+| the third argument is the length of the string
+>
 
 -*.
