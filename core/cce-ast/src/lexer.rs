@@ -1,4 +1,4 @@
-use crate::stream::InputStream;
+use cce_stream::InputStream;
 
 use thiserror::Error;
 
@@ -12,13 +12,14 @@ pub enum Token {
   Identifier(String),
   Keyword(String),
   Literal(String),
-  Punctuation(char)
+  Punctuation(char),
+  LowLevelSequence(String)
 }
 
 #[derive(Error, Debug)]
 pub enum LexerError {
   #[error("{0}")]
-  InputStreamError(#[from] crate::stream::InputStreamError),
+  InputStreamError(#[from] cce_stream::InputStreamError),
   #[error("Unexpected end of stream")]
   UnexpectedEndOfStream,
   #[error("Unexpected character: {0}")]
@@ -82,6 +83,65 @@ impl Lexer {
     Ok(Token::Literal(literal))
   }
 
+  fn create_low_level_sequence(&mut self) -> Result<Token, LexerError> {
+    let mut sequence: String = String::new();
+    let mut c: Option<char> = self.stream.peek()?;
+    let mut dash_found: bool = false;
+
+    loop {
+      if let Some(ch) = c {
+        if ch == '-' {
+          if dash_found {
+            sequence.push(ch);
+            self.stream.next()?;
+            c = self.stream.peek()?;
+          } else {
+            dash_found = true;
+            self.stream.next()?;
+            c = self.stream.peek()?;
+          }
+        } else if ch == '|' {
+          if dash_found {
+            sequence.push(ch);
+            self.stream.next()?;
+            c = self.stream.peek()?;
+          } else {
+            return Err(LexerError::UnexpectedCharacter(ch));
+          }
+        } else if ch == '.' {
+          if dash_found {
+            sequence.push(ch);
+            self.stream.next()?;
+            c = self.stream.peek()?;
+          } else {
+            return Err(LexerError::UnexpectedCharacter(ch));
+          }
+        } else if ch == '*' {
+          if dash_found {
+            self.stream.next()?;
+            break;
+          } else {
+            sequence.push(ch);
+          }
+        } else {
+          if dash_found {
+            sequence.push('-');
+            dash_found = false;
+          };
+
+          sequence.push(ch);
+
+          self.stream.next()?;
+          c = self.stream.peek()?;
+        }
+      } else {
+        return Err(LexerError::UnexpectedEndOfStream);
+      }
+    };
+
+    Ok(Token::LowLevelSequence(sequence))
+  }
+
   pub fn next(&mut self) -> Result<Option<Token>, LexerError> {
     if self.peeked.is_some() {
       let tok = self.peeked.clone();
@@ -111,6 +171,14 @@ impl Lexer {
       },
       '-' | '|' | '.' => {
         self.stream.next()?;
+
+        if let Some(ch) = self.stream.peek()? {
+          if ch == '*' {
+            self.stream.next()?;
+            return Ok(Some(self.create_low_level_sequence()?));
+          }
+        };
+
         Ok(Some(Token::Punctuation(c)))
       },
       _ => {

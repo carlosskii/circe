@@ -77,7 +77,10 @@ impl Parser {
           },
           Token::Punctuation(_) => {
             break;
-          }
+          },
+          Token::LowLevelSequence(_) => {
+            return Err(ParserError::SyntaxError("Low level sequences are not allowed here".to_string()));
+          },
         }
 
         self.lexer.next()?;

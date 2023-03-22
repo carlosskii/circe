@@ -1,4 +1,4 @@
-use cce_ast::InputStream;
+use cce_stream::InputStream;
 use std::io::Cursor;
 
 #[test]

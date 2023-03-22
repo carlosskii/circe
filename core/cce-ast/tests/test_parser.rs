@@ -1,4 +1,5 @@
 use cce_ast::*;
+use cce_stream::InputStream;
 use std::io::Cursor;
 
 

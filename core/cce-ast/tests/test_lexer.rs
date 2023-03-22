@@ -1,4 +1,5 @@
-use cce_ast::{InputStream, Lexer, Token};
+use cce_ast::{Lexer, Token};
+use cce_stream::InputStream;
 use std::io::Cursor;
 
 #[test]
@@ -71,4 +72,16 @@ fn test_lexer_peek() {
 
   let next_token = lexer.next().unwrap().unwrap();
   assert_eq!(next_token, Token::Identifier("world".to_string()));
+}
+
+#[test]
+fn test_lexer_lowlevel() {
+  let contents: Cursor<&[u8]> = Cursor::new(b"hello -* @SYSREG0 = 0x1234 -*");
+  let mut lexer = Lexer::new(InputStream::new(Box::new(contents)));
+
+  let next_token = lexer.next().unwrap().unwrap();
+  assert_eq!(next_token, Token::Identifier("hello".to_string()));
+
+  let next_token = lexer.next().unwrap().unwrap();
+  assert_eq!(next_token, Token::LowLevelSequence(" @SYSREG0 = 0x1234 ".to_string()));
 }
