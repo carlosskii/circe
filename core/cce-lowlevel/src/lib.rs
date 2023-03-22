@@ -20,6 +20,8 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 
 mod lexer;
+mod parser;
 
 
-pub use lexer::{Lexer, Token, LexerError};
+pub use lexer::*;
+pub use parser::*;

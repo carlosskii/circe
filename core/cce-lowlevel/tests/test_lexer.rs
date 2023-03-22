@@ -65,3 +65,26 @@ fn test_lexer_highlevel_sequence() {
   assert_eq!(lexer.next().unwrap().unwrap(), Token::Punctuation('='));
   assert_eq!(lexer.next().unwrap().unwrap(), Token::HighLevelSequence(" the value to insert ".to_string()));
 }
+
+#[test]
+fn test_lexer_peek() {
+  let contents: Cursor<&[u8]> = Cursor::new(b"@SYSREG0 = 1");
+  let mut lexer = Lexer::new(InputStream::new(Box::new(contents)));
+
+  let expected: Vec<Token> = vec![
+    Token::Variable("SYSREG0".to_string()),
+    Token::Punctuation('='),
+    Token::Literal("1".to_string())
+  ];
+
+  assert_eq!(lexer.peek().unwrap().unwrap(), expected[0]);
+  assert_eq!(lexer.next().unwrap().unwrap(), expected[0]);
+
+  assert_eq!(lexer.next().unwrap().unwrap(), expected[1]);
+
+  assert_eq!(lexer.peek().unwrap().unwrap(), expected[2]);
+  assert_eq!(lexer.peek().unwrap().unwrap(), expected[2]);
+  assert_eq!(lexer.next().unwrap().unwrap(), expected[2]);
+
+  assert!(lexer.peek().unwrap().is_none());
+}
