@@ -125,7 +125,7 @@ fn test_parser_howto() {
       CommandComponent::Keyword("world".to_string())
     ],
     body: vec![
-      Command {
+      HowToCommand::HighLevel(Command {
         components: vec![
           CommandComponent::Keyword("say".to_string()),
           CommandComponent::Keyword("hello".to_string()),
@@ -139,7 +139,7 @@ fn test_parser_howto() {
             CommandComponent::Keyword("goodbye".to_string())
           ]
         ]
-      }
+      })
     ]
   });
 
@@ -159,7 +159,7 @@ fn test_parser_howto_multiple() {
       CommandComponent::Keyword("world".to_string())
     ],
     body: vec![
-      Command {
+      HowToCommand::HighLevel(Command {
         components: vec![
           CommandComponent::Keyword("say".to_string()),
           CommandComponent::Keyword("hello".to_string()),
@@ -173,8 +173,8 @@ fn test_parser_howto_multiple() {
             CommandComponent::Keyword("goodbye".to_string())
           ]
         ]
-      },
-      Command {
+      }),
+      HowToCommand::HighLevel(Command {
         components: vec![
           CommandComponent::Keyword("say".to_string()),
           CommandComponent::Keyword("hello".to_string()),
@@ -182,7 +182,7 @@ fn test_parser_howto_multiple() {
           CommandComponent::Keyword("again".to_string())
         ],
         modifiers: vec![]
-      }
+      })
     ]
   });
 
@@ -275,15 +275,15 @@ fn test_parser_howto_multiple_nomod() {
       CommandComponent::Keyword("world".to_string())
     ],
     body: vec![
-      Command {
+      HowToCommand::HighLevel(Command {
         components: vec![
           CommandComponent::Keyword("say".to_string()),
           CommandComponent::Keyword("hello".to_string()),
           CommandComponent::Keyword("world".to_string())
         ],
         modifiers: vec![]
-      },
-      Command {
+      }),
+      HowToCommand::HighLevel(Command {
         components: vec![
           CommandComponent::Keyword("say".to_string()),
           CommandComponent::Keyword("hello".to_string()),
@@ -291,7 +291,7 @@ fn test_parser_howto_multiple_nomod() {
           CommandComponent::Keyword("again".to_string())
         ],
         modifiers: vec![]
-      }
+      })
     ]
   });
 

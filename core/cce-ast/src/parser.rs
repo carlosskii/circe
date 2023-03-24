@@ -20,6 +20,9 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 
 use crate::lexer::{Lexer, Token, LexerError};
+use cce_lowlevel as low;
+use cce_stream::InputStream;
+use std::io::Cursor;
 
 use thiserror::Error;
 
@@ -50,7 +53,13 @@ pub enum CommandComponent {
 #[derive(Debug, Clone, PartialEq)]
 pub struct HowToStatement {
   pub signature: Vec<CommandComponent>,
-  pub body: Vec<Command>
+  pub body: Vec<HowToCommand>
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum HowToCommand {
+  HighLevel(Command),
+  LowLevel(Vec<low::ParseNode>)
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -67,7 +76,9 @@ pub enum ParserError {
   #[error("Syntax error: {0}")]
   SyntaxError(String),
   #[error("Internal error: {0}")]
-  InternalError(String)
+  InternalError(String),
+  #[error("Low level parser error: {0}")]
+  LowLevelParserError(#[from] low::ParserError)
 }
 
 
@@ -157,9 +168,41 @@ impl Parser {
     })
   }
 
+  fn parse_howto_command(&mut self) -> Result<HowToCommand, ParserError> {
+    let tok: Option<Token> = self.lexer.peek()?;
+
+    match tok {
+      Some(Token::LowLevelSequence(seq)) => {
+        self.lexer.next()?;
+
+        let data: Vec<u8> = seq.into_bytes();
+
+        let mut parser: low::Parser = low::Parser::new(low::Lexer::new(
+          InputStream::new(Box::new(Cursor::new(data)))
+        ));
+
+        let mut nodes: Vec<low::ParseNode> = Vec::new();
+
+        loop {
+          let node: Option<low::ParseNode> = parser.next()?;
+          if let Some(n) = node {
+            nodes.push(n);
+          } else {
+            break;
+          }
+        };
+
+        Ok(HowToCommand::LowLevel(nodes))
+      },
+      _ => {
+        Ok(HowToCommand::HighLevel(self.parse_command()?))
+      }
+    }
+  }
+
   fn parse_howto_statement(&mut self) -> Result<HowToStatement, ParserError> {
     let signature: Vec<CommandComponent> = self.parse_vec_command_component()?;
-    let mut body: Vec<Command> = Vec::new();
+    let mut body: Vec<HowToCommand> = Vec::new();
 
     let mut tok: Option<Token> = self.lexer.peek()?;
 
@@ -177,7 +220,7 @@ impl Parser {
     };
 
     loop {
-      let cmd: Command = self.parse_command()?;
+      let cmd: HowToCommand = self.parse_howto_command()?;
       body.push(cmd);
 
       tok = self.lexer.peek()?;

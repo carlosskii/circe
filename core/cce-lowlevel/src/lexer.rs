@@ -117,7 +117,10 @@ impl Lexer {
 
     while c.is_whitespace() {
       self.stream.next()?;
-      c = self.stream.peek()?.ok_or(LexerError::UnexpectedEndOfInput)?;
+      c = match self.stream.peek()? {
+        Some(c) => c,
+        None => return Ok(None)
+      }
     };
 
     match c {

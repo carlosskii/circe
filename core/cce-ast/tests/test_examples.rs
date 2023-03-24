@@ -50,7 +50,7 @@ fn test_parser_example_helloworld() {
         CommandComponent::Keyword("console".to_string())
       ],
       body: vec![
-        Command {
+        HowToCommand::HighLevel(Command {
           components: vec![
             CommandComponent::Keyword("write".to_string()),
             CommandComponent::Keyword("the".to_string()),
@@ -63,7 +63,7 @@ fn test_parser_example_helloworld() {
               CommandComponent::Keyword("a".to_string()),
               CommandComponent::Keyword("newline".to_string())
           ]]
-        }
+        })
       ]
     }),
     ParseNode::WhatIsStatement(WhatIsStatement {

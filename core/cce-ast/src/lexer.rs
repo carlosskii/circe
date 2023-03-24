@@ -106,56 +106,17 @@ impl Lexer {
   fn create_low_level_sequence(&mut self) -> Result<Token, LexerError> {
     let mut sequence: String = String::new();
     let mut c: Option<char> = self.stream.peek()?;
-    let mut dash_found: bool = false;
 
     loop {
       if let Some(ch) = c {
-        if ch == '-' {
-          if dash_found {
-            sequence.push(ch);
-            self.stream.next()?;
-            c = self.stream.peek()?;
-          } else {
-            dash_found = true;
-            self.stream.next()?;
-            c = self.stream.peek()?;
-          }
-        } else if ch == '|' {
-          if dash_found {
-            sequence.push(ch);
-            self.stream.next()?;
-            c = self.stream.peek()?;
-          } else {
-            return Err(LexerError::UnexpectedCharacter(ch));
-          }
-        } else if ch == '.' {
-          if dash_found {
-            sequence.push(ch);
-            self.stream.next()?;
-            c = self.stream.peek()?;
-          } else {
-            return Err(LexerError::UnexpectedCharacter(ch));
-          }
-        } else if ch == '*' {
-          if dash_found {
-            self.stream.next()?;
-            break;
-          } else {
-            sequence.push(ch);
-          }
+        if ch == '*' {
+          self.stream.next()?;
+          break;
         } else {
-          if dash_found {
-            sequence.push('-');
-            dash_found = false;
-          };
-
           sequence.push(ch);
-
           self.stream.next()?;
           c = self.stream.peek()?;
         }
-      } else {
-        return Err(LexerError::UnexpectedEndOfStream);
       }
     };
 
@@ -191,15 +152,11 @@ impl Lexer {
       },
       '-' | '|' | '.' => {
         self.stream.next()?;
-
-        if let Some(ch) = self.stream.peek()? {
-          if ch == '*' {
-            self.stream.next()?;
-            return Ok(Some(self.create_low_level_sequence()?));
-          }
-        };
-
         Ok(Some(Token::Punctuation(c)))
+      },
+      '*' => {
+        self.stream.next()?;
+        Ok(Some(self.create_low_level_sequence()?))
       },
       _ => {
         Err(LexerError::UnexpectedCharacter(c))

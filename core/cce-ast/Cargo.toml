@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 thiserror = "1.0.40"
 cce-stream = { path = "../cce-stream" }
+cce-lowlevel = { path = "../cce-lowlevel" }
