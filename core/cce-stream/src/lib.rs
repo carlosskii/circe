@@ -31,9 +31,9 @@ impl<T: Read + Seek> Streamable for T {
 
 pub struct InputStream {
   pub(crate) stream: Box<dyn Streamable>,
-  pub(crate) line: usize,
-  pub(crate) column: usize,
-  pub(crate) pos: usize,
+  pub line: usize,
+  pub column: usize,
+  pub pos: usize,
   pub(crate) buf: [u8; 4],
   pub(crate) buf_len: usize,
   pub(crate) peeked: Option<char>
