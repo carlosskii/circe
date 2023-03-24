@@ -1,17 +1,16 @@
 
-whatis the %OBJECT
--[
+howto infer 'the %OBJECT'
+-*
 
-%OBJECT.0
+@ARG0
 
--]
+-*.
 
-whatis %OBJECT of %OBJECT
--[
+howto infer '%OBJECT of %OBJECT'
+-*
 
-%OBJECT.1::%OBJECT.0
+@ARG1->@ARG0
 
--]
+-*.
 
-
-the 'proof' of the 'pudding'
+the 'proof' of the 'pudding'.

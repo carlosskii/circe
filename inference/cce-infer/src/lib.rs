@@ -19,7 +19,8 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 */
 
 
-mod nodes;
+mod deduce;
+mod infer;
 
-
-pub use nodes::*;
+pub use deduce::*;
+pub use infer::*;
