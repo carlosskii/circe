@@ -19,7 +19,7 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 */
 
 
-use std::io::{Read, Seek};
+use std::{io::{Read, Seek, Cursor}};
 
 use thiserror::Error;
 
@@ -129,5 +129,26 @@ impl InputStream {
       },
       None => Ok(None)
     }
+  }
+}
+
+impl From<String> for InputStream {
+  fn from(s: String) -> InputStream {
+    let contents: Box<[u8]> = s.into_bytes().into_boxed_slice();
+    InputStream::new(Box::new(Cursor::new(contents)))
+  }
+}
+
+impl From<&str> for InputStream {
+  fn from(s: &str) -> InputStream {
+    let contents: Box<[u8]> = s.as_bytes().into();
+    InputStream::new(Box::new(Cursor::new(contents)))
+  }
+}
+
+impl From<&[u8]> for InputStream {
+  fn from(s: &[u8]) -> InputStream {
+    let contents: Box<[u8]> = s.into();
+    InputStream::new(Box::new(Cursor::new(contents)))
   }
 }

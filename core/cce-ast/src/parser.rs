@@ -228,8 +228,12 @@ impl Parser {
         Some(Token::Punctuation('-')) => {
           self.lexer.next()?;
         },
+        Some(Token::Punctuation('.')) => {
+          self.lexer.next()?;
+          break;
+        },
         Some(Token::Punctuation(_)) => {
-          return Err(ParserError::SyntaxError("Expected '-'".to_string()));
+          return Err(ParserError::SyntaxError("Expected '-' or '.'".to_string()));
         },
         _ => { break }
       }
@@ -329,5 +333,23 @@ impl Parser {
     }
 
     Ok(self.peeked.clone())
+  }
+}
+
+impl From<String> for Parser {
+  fn from(s: String) -> Self {
+    Parser::new(Lexer::from(s))
+  }
+}
+
+impl From<&str> for Parser {
+  fn from(s: &str) -> Self {
+    Parser::new(Lexer::from(s))
+  }
+}
+
+impl From<&[u8]> for Parser {
+  fn from(s: &[u8]) -> Self {
+    Parser::new(Lexer::from(s))
   }
 }

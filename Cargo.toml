@@ -4,5 +4,6 @@ members = [
   "core/cce-lowlevel",
   "core/cce-stream",
 
-  "inference/cce-infer"
+  "inference/cce-infer",
+  "inference/cce-infer-ast",
 ]

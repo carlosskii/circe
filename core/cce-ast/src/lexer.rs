@@ -139,7 +139,12 @@ impl Lexer {
 
     while c.is_whitespace() {
       self.stream.next()?;
-      c = self.stream.peek()?.ok_or(LexerError::UnexpectedEndOfStream)?;
+      c = match self.stream.peek()? {
+        Some(c) => c,
+        None => {
+          return Ok(None)
+        }
+      };
     };
 
     match c {
@@ -170,5 +175,23 @@ impl Lexer {
     };
 
     Ok(self.peeked.clone())
+  }
+}
+
+impl From<String> for Lexer {
+  fn from(s: String) -> Lexer {
+    Lexer::new(InputStream::from(s))
+  }
+}
+
+impl From<&str> for Lexer {
+  fn from(s: &str) -> Lexer {
+    Lexer::new(InputStream::from(s))
+  }
+}
+
+impl From<&[u8]> for Lexer {
+  fn from(s: &[u8]) -> Lexer {
+    Lexer::new(InputStream::from(s))
   }
 }
