@@ -19,16 +19,31 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 */
 
 
-use cce_infer_ast::ProgramNode;
+use cce_infer::Deducer;
+use cce_infer_ast::{convert, ProgramNode};
+use cce_ast as ast;
 
-pub fn infer_pass(nodes: &Vec<ProgramNode>) -> (Vec<ProgramNode>, bool) {
-  let changed: bool = false;
-  let mut result: Vec<ProgramNode> = Vec::new();
 
-  for node in nodes.iter() {
-    result.push(node.clone());
-    println!("{:?}", node);
+#[test]
+fn test_infer_basic() {
+  let mut parser: ast::Parser = ast::Parser::from("print 'Hello, world!' to the console.");
+
+  let mut parse_nodes: Vec<ast::ParseNode> = Vec::new();
+  loop {
+    match parser.next().unwrap() {
+      Some(node) => parse_nodes.push(node),
+      None => break
+    }
+  };
+
+  let infer_ast: Vec<ProgramNode> = convert(parse_nodes);
+
+  let mut deducer: Deducer = Deducer::new();
+  for node in &infer_ast {
+    deducer.add_node(node.clone());
   }
 
-  return (result, changed);
+  let result: Vec<ProgramNode> = deducer.deduce();
+
+  assert_eq!(result, infer_ast);
 }
