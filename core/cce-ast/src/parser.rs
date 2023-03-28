@@ -131,34 +131,30 @@ impl Parser {
 
     let mut tok: Option<Token> = self.lexer.peek()?;
 
-    loop {
-      if let Some(token) = tok {
-        match token {
-          Token::Punctuation(punc) => {
-            match punc {
-              '|' => {
-                self.lexer.next()?;
-                modifiers.push(self.parse_vec_command_component()?);
-                tok = self.lexer.peek()?;
-              },
-              '-' => {
-                break;
-              },
-              '.' => {
-                self.lexer.next()?;
-                break;
-              },
-              _ => {
-                return Err(ParserError::SyntaxError("Expected '|'".to_string()));
-              }
+    while let Some(token) = tok.clone() {
+      match token {
+        Token::Punctuation(punc) => {
+          match punc {
+            '|' => {
+              self.lexer.next()?;
+              modifiers.push(self.parse_vec_command_component()?);
+              tok = self.lexer.peek()?;
+            },
+            '-' => {
+              break;
+            },
+            '.' => {
+              self.lexer.next()?;
+              break;
+            },
+            _ => {
+              return Err(ParserError::SyntaxError("Expected '|'".to_string()));
             }
-          },
-          _ => {
-            break;
           }
+        },
+        _ => {
+          break;
         }
-      } else {
-        break;
       }
     };
 

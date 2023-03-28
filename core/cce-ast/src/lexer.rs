@@ -97,6 +97,8 @@ impl Lexer {
           self.stream.next()?;
           c = self.stream.peek()?;
         }
+      } else {
+        return Err(LexerError::UnexpectedEndOfStream);
       }
     };
 

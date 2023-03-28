@@ -109,3 +109,14 @@ fn test_lexer_lowlevel() {
   let next_token = lexer.next().unwrap().unwrap();
   assert_eq!(next_token, Token::LowLevelSequence(" @SYSREG0 = 0x1234 ".to_string()));
 }
+
+#[test]
+#[should_panic]
+fn test_lexer_open_string() {
+  let mut lexer = Lexer::from("howto 'hello world");
+
+  let next_token = lexer.next().unwrap().unwrap();
+  assert_eq!(next_token, Token::Keyword("howto".to_string()));
+  
+  lexer.next().unwrap().unwrap();
+}
