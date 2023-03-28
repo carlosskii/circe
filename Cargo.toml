@@ -6,4 +6,6 @@ members = [
 
   "inference/cce-infer",
   "inference/cce-infer-ast",
+
+  "ccec"
 ]

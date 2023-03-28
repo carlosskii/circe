@@ -27,7 +27,6 @@ pub fn infer_pass(nodes: &Vec<ProgramNode>) -> (Vec<ProgramNode>, bool) {
 
   for node in nodes.iter() {
     result.push(node.clone());
-    println!("{:?}", node);
   }
 
   return (result, changed);

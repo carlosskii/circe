@@ -1,0 +1,4 @@
+print 'Hello, world!' to the console.
+
+howto print a string to the console
+- write the string to stdout.

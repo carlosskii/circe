@@ -19,7 +19,7 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 */
 
 
-mod nodes;
+pub mod nodes;
 mod convert;
 
 pub use nodes::*;
