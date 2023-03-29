@@ -1,10 +1,10 @@
 [package]
 name = "cce-lowlevel"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cce-stream = { path = "../cce-stream" }
+cce-stream = { path = "../cce-stream", version = "0.0.1" }
 thiserror = "1.0.40"

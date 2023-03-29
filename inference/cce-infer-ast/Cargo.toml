@@ -1,9 +1,9 @@
 [package]
 name = "cce-infer-ast"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [dependencies]
-cce-ast = { path = "../../core/cce-ast" }
-cce-lowlevel = { path = "../../core/cce-lowlevel" }
-cce-stream = { path = "../../core/cce-stream" }
+cce-ast = { path = "../../core/cce-ast", version = "0.0.1" }
+cce-lowlevel = { path = "../../core/cce-lowlevel", version = "0.0.1" }
+cce-stream = { path = "../../core/cce-stream", version = "0.0.1" }

@@ -1,10 +1,10 @@
 [package]
 name = "ccec"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [dependencies]
 clap = { version = "4.1.13", features = ["derive"] }
-cce-ast = { path = "../core/cce-ast" }
-cce-infer = { path = "../inference/cce-infer" }
-cce-infer-ast = { path = "../inference/cce-infer-ast" }
+cce-ast = { path = "../core/cce-ast", version = "0.0.1" }
+cce-infer = { path = "../inference/cce-infer", version = "0.0.1" }
+cce-infer-ast = { path = "../inference/cce-infer-ast", version = "0.0.1" }
