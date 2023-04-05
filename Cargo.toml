@@ -1,7 +1,7 @@
 [workspace]
 members = [
   "core/cce-ast",
-  "core/cce-lowlevel",
+  "lowlevel/cce-llast",
   "core/cce-stream",
 
   "inference/cce-infer",
