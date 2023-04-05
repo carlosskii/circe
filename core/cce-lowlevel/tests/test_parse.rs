@@ -18,10 +18,19 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 */
 
+use cce_lowlevel::parse;
 
-use syn;
 
-
-pub fn parse(input: &str) -> syn::Result<syn::File> {
-  syn::parse_file(input)
+#[test]
+fn test_parse() {
+  let input = r#"
+    /*
+    This is a test
+    */
+    fn main() {
+      println!("Hello, world!");
+    }
+  "#;
+  let result = parse(input);
+  assert!(result.is_ok());
 }

@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 cce-stream = { path = "../cce-stream", version = "0.0.1" }
+syn = { version = "2.0.13", features = ["full"], default-features = false }
 thiserror = "1.0.40"
