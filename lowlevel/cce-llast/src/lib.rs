@@ -18,10 +18,18 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-
 use syn;
 
+pub mod ast;
 
-pub fn parse(input: &str) -> syn::Result<syn::File> {
-  syn::parse_file(input)
+pub fn parse(input: &str) -> syn::Result<Vec<ast::LLTopStatement>> {
+  let file = syn::parse_file(input)?;
+
+  let mut result = Vec::new();
+
+  for item in file.items {
+    result.push(ast::LLTopStatement::from(item));
+  };
+
+  Ok(result)
 }

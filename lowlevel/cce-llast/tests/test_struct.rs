@@ -18,19 +18,50 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-use cce_lowlevel::parse;
+use cce_llast::{parse, ast::*};
 
 
 #[test]
-fn test_parse() {
+fn test_struct_basic() {
   let input = r#"
-    /*
-    This is a test
-    */
-    fn main() {
-      println!("Hello, world!");
+    struct Foo {
+      bar: u32
     }
   "#;
+
   let result = parse(input);
-  assert!(result.is_ok());
+
+  assert_eq!(result.unwrap(), vec![
+    LLTopStatement::LLStruct(LLStruct {
+      name: "Foo".to_string(),
+      fields: vec![
+        LLStructField {
+          name: "bar".to_string(),
+          ty: LLType {
+            name: "u32".to_string(),
+          }
+        }
+      ]
+    })
+  ])
+}
+
+#[test]
+#[should_panic]
+fn test_struct_no_fields() {
+  let input = r#"
+    struct Foo {}
+  "#;
+
+  parse(input).unwrap();
+}
+
+#[test]
+#[should_panic]
+fn test_struct_no_name() {
+  let input = r#"
+    struct {}
+  "#;
+
+  parse(input).unwrap();
 }
