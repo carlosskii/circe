@@ -23,7 +23,7 @@ use syn;
 /****************************************
 * LLTopStatement
 ****************************************/
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum LLTopStatement {
   LLFunction(LLFunction),
   LLStruct(LLStruct)
@@ -42,7 +42,7 @@ impl From<syn::Item> for LLTopStatement {
 /****************************************
 * LLFunction
 ****************************************/
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 
 pub struct LLFunction {
   pub name: String,
@@ -63,7 +63,7 @@ impl From<syn::ItemFn> for LLFunction {
 /****************************************
 * LLStruct
 ****************************************/
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 
 pub struct LLStruct {
   pub name: String,
@@ -86,7 +86,7 @@ impl From<syn::ItemStruct> for LLStruct {
 /****************************************
 * LLArgument
 ****************************************/
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 
 pub struct LLArgument {
   pub name: String,
@@ -114,7 +114,7 @@ impl From<&syn::FnArg> for LLArgument {
 /****************************************
 * LLType
 ****************************************/
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 
 pub struct LLType {
   pub name: String
@@ -145,7 +145,7 @@ impl From<&syn::Type> for LLType {
 /****************************************
 * LLStructField
 ****************************************/
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 
 pub struct LLStructField {
   pub name: String,

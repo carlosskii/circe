@@ -20,9 +20,7 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 
 use crate::lexer::{Lexer, Token, LexerError};
-use cce_lowlevel as low;
-use cce_stream::InputStream;
-use std::io::Cursor;
+use cce_llast::{ast::*, parse};
 
 use thiserror::Error;
 
@@ -59,7 +57,7 @@ pub struct HowToStatement {
 #[derive(Debug, Clone, PartialEq)]
 pub enum HowToCommand {
   HighLevel(Command),
-  LowLevel(Vec<low::ParseNode>)
+  LowLevel(Vec<LLTopStatement>)
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -76,9 +74,7 @@ pub enum ParserError {
   #[error("Syntax error: {0}")]
   SyntaxError(String),
   #[error("Internal error: {0}")]
-  InternalError(String),
-  #[error("Low level parser error: {0}")]
-  LowLevelParserError(#[from] low::ParserError)
+  InternalError(String)
 }
 
 
@@ -171,24 +167,14 @@ impl Parser {
       Some(Token::LowLevelSequence(seq)) => {
         self.lexer.next()?;
 
-        let data: Vec<u8> = seq.into_bytes();
-
-        let mut parser: low::Parser = low::Parser::new(low::Lexer::new(
-          InputStream::new(Box::new(Cursor::new(data)))
-        ));
-
-        let mut nodes: Vec<low::ParseNode> = Vec::new();
-
-        loop {
-          let node: Option<low::ParseNode> = parser.next()?;
-          if let Some(n) = node {
-            nodes.push(n);
-          } else {
-            break;
+        return match parse(seq.as_str()) {
+          Ok(ast) => {
+            Ok(HowToCommand::LowLevel(ast))
+          },
+          Err(_) => {
+            unimplemented!();
           }
-        };
-
-        Ok(HowToCommand::LowLevel(nodes))
+        }
       },
       _ => {
         Ok(HowToCommand::HighLevel(self.parse_command()?))

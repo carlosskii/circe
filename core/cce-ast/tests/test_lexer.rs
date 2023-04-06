@@ -97,7 +97,7 @@ fn test_lexer_peek() {
 
 #[test]
 fn test_lexer_lowlevel() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"hello -* @SYSREG0 = 0x1234 *.");
+  let contents: Cursor<&[u8]> = Cursor::new(b"hello -$$ struct Foo { bar: u32 } $$.");
   let mut lexer = Lexer::new(InputStream::new(Box::new(contents)));
 
   let next_token = lexer.next().unwrap().unwrap();
@@ -107,7 +107,7 @@ fn test_lexer_lowlevel() {
   assert_eq!(next_token, Token::Punctuation('-'));
 
   let next_token = lexer.next().unwrap().unwrap();
-  assert_eq!(next_token, Token::LowLevelSequence(" @SYSREG0 = 0x1234 ".to_string()));
+  assert_eq!(next_token, Token::LowLevelSequence(" struct Foo { bar: u32 } ".to_string()));
 }
 
 #[test]

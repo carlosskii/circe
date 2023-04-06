@@ -20,7 +20,6 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 
 use cce_ast as ast;
-use cce_lowlevel as ll;
 use crate::nodes::*;
 
 pub fn convert(program: Vec<ast::ParseNode>) -> Vec<ProgramNode> {
@@ -55,7 +54,7 @@ fn convert_howto(howto: ast::HowToStatement) -> HowToNode {
 fn convert_howto_command(command: ast::HowToCommand) -> HowToCommand {
   match command {
     ast::HowToCommand::HighLevel(command) => HowToCommand::HighLevel(convert_command(command)),
-    ast::HowToCommand::LowLevel(lowlevel) => HowToCommand::LowLevel(convert_lowlevel(lowlevel))
+    ast::HowToCommand::LowLevel(lowlevel) => HowToCommand::LowLevel(lowlevel)
   }
 }
 
@@ -63,46 +62,5 @@ fn convert_whatis(whatis: ast::WhatIsStatement) -> WhatIsNode {
   WhatIsNode {
     signature: whatis.signature.into_iter().map(convert_command_component).collect(),
     body: whatis.body.into_iter().map(convert_command).collect()
-  }
-}
-
-fn convert_lowlevel(lowlevel: Vec<ll::ParseNode>) -> Vec<LowLevelCommand> {
-  lowlevel.into_iter().map(|node| match node {
-    ll::ParseNode::CommandCall(command) => LowLevelCommand::CommandCall(convert_lowlevel_command_call(command)),
-    ll::ParseNode::VariableAssignment(assignment) => LowLevelCommand::VariableAssignment(LLVariableAssignment {
-      name: assignment.name,
-      value: convert_lowlevel_variable_value(assignment.value)
-    })
-  }).collect()
-}
-
-fn convert_lowlevel_command_call(command: ll::CommandCall) -> CommandNode {
-  match command {
-    ll::CommandCall::HighLevelSequence(hls) => {
-      let mut parser: ast::Parser = ast::Parser::from(hls);
-
-      let cmd: ast::Command = match parser.next().unwrap() {
-        Some(ast::ParseNode::Command(cmd)) => cmd,
-        _ => panic!("Invalid high-level sequence")
-      };
-
-      convert_command(cmd)
-    }
-  }
-}
-
-fn convert_lowlevel_variable_value(value: ll::VariableValue) -> LLVariableValue {
-  match value {
-    ll::VariableValue::Number(number) => LLVariableValue::Number(number),
-    ll::VariableValue::HighLevelSequence(hls) => {
-      let mut parser: ast::Parser = ast::Parser::from(hls);
-
-      let cmd: ast::Command = match parser.next().unwrap() {
-        Some(ast::ParseNode::Command(cmd)) => cmd,
-        _ => panic!("Invalid high-level sequence")
-      };
-
-      LLVariableValue::CommandResult(convert_command(cmd))
-    }
   }
 }

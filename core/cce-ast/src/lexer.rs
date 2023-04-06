@@ -108,13 +108,23 @@ impl Lexer {
   fn create_low_level_sequence(&mut self) -> Result<Token, LexerError> {
     let mut sequence: String = String::new();
     let mut c: Option<char> = self.stream.peek()?;
+    let mut dollars = 0;
 
     loop {
       if let Some(ch) = c {
-        if ch == '*' {
+        if ch == '$' {
           self.stream.next()?;
-          break;
+          dollars += 1;
+
+          if dollars == 2 {
+            break;
+          }
         } else {
+          if dollars == 1 {
+            sequence.push('$');
+            dollars = 0;
+          }
+
           sequence.push(ch);
           self.stream.next()?;
           c = self.stream.peek()?;
@@ -161,8 +171,17 @@ impl Lexer {
         self.stream.next()?;
         Ok(Some(Token::Punctuation(c)))
       },
-      '*' => {
+      '$' => {
         self.stream.next()?;
+
+        if let Some(ch) = self.stream.peek()? {
+          if ch == '$' {
+            self.stream.next()?;
+          } else {
+            return Err(LexerError::UnexpectedCharacter(ch));
+          }
+        }
+
         Ok(Some(self.create_low_level_sequence()?))
       },
       _ => {

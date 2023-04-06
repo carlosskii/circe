@@ -18,6 +18,7 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 */
 
+use cce_llast::ast::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum ProgramNode {
@@ -47,25 +48,7 @@ pub struct WhatIsNode {
 #[derive(Debug, Clone, PartialEq)]
 pub enum HowToCommand {
   HighLevel(CommandNode),
-  LowLevel(Vec<LowLevelCommand>)
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub enum LowLevelCommand {
-  CommandCall(CommandNode),
-  VariableAssignment(LLVariableAssignment)
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub struct LLVariableAssignment {
-  pub name: String,
-  pub value: LLVariableValue
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub enum LLVariableValue {
-  Number(f64),
-  CommandResult(CommandNode)
+  LowLevel(Vec<LLTopStatement>)
 }
 
 #[derive(Debug, Clone, PartialEq)]
