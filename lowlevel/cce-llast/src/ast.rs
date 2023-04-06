@@ -43,7 +43,6 @@ impl From<syn::Item> for LLTopStatement {
 * LLFunction
 ****************************************/
 #[derive(Debug, PartialEq, Clone)]
-
 pub struct LLFunction {
   pub name: String,
   pub args: Vec<LLArgument>,
@@ -64,7 +63,6 @@ impl From<syn::ItemFn> for LLFunction {
 * LLStruct
 ****************************************/
 #[derive(Debug, PartialEq, Clone)]
-
 pub struct LLStruct {
   pub name: String,
   pub fields: Vec<LLStructField>
@@ -87,7 +85,6 @@ impl From<syn::ItemStruct> for LLStruct {
 * LLArgument
 ****************************************/
 #[derive(Debug, PartialEq, Clone)]
-
 pub struct LLArgument {
   pub name: String,
   pub ty: LLType
@@ -115,7 +112,6 @@ impl From<&syn::FnArg> for LLArgument {
 * LLType
 ****************************************/
 #[derive(Debug, PartialEq, Clone)]
-
 pub struct LLType {
   pub name: String
 }
@@ -146,7 +142,6 @@ impl From<&syn::Type> for LLType {
 * LLStructField
 ****************************************/
 #[derive(Debug, PartialEq, Clone)]
-
 pub struct LLStructField {
   pub name: String,
   pub ty: LLType

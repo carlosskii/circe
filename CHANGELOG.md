@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `cce-llast` crate
+  - Uses `syn` to parse low-level Circe instructions into an AST
+
+### Changed
+
+- `cce-lowlevel` crate
+  - Uses `cce-llast` instead now
+
 ## [0.0.1] - 2023-03-29
 
 ### Added
