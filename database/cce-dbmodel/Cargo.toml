@@ -1,0 +1,7 @@
+[package]
+name = "cce-dbmodel"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cce-dbmodel-proc = { path = "../cce-dbmodel-proc" }
