@@ -22,8 +22,8 @@ use cce_stream::InputStream;
 
 use thiserror::Error;
 
-pub struct Lexer {
-  pub(crate) stream: InputStream,
+pub struct Lexer<'s> {
+  pub(crate) stream: InputStream<'s>,
   pub(crate) peeked: Option<Token>
 }
 
@@ -47,7 +47,7 @@ pub enum LexerError {
 }
 
 
-impl Lexer {
+impl<'s> Lexer<'s> {
   pub fn new(stream: InputStream) -> Lexer {
     Lexer {
       stream,
@@ -57,13 +57,13 @@ impl Lexer {
 
   fn create_ident_or_keyword(&mut self) -> Result<Token, LexerError> {
     let mut ident = String::new();
-    let mut c: Option<char> = self.stream.peek()?;
+    let mut c: Option<char> = self.stream.peek();
 
     while let Some(ch) = c {
       if ch.is_alphanumeric() || ch == '_' {
         ident.push(ch);
-        self.stream.next()?;
-        c = self.stream.peek()?;
+        self.stream.next();
+        c = self.stream.peek();
       } else {
         break;
       }
@@ -81,17 +81,17 @@ impl Lexer {
 
   fn create_string_literal(&mut self) -> Result<Token, LexerError> {
     let mut literal: String = String::new();
-    let mut c: Option<char> = self.stream.peek()?;
+    let mut c: Option<char> = self.stream.peek();
 
     loop {
       if let Some(ch) = c {
         if ch == '\'' {
-          self.stream.next()?;
+          self.stream.next();
           break;
         } else {
           literal.push(ch);
-          self.stream.next()?;
-          c = self.stream.peek()?;
+          self.stream.next();
+          c = self.stream.peek();
         }
       } else {
         return Err(LexerError::UnexpectedEndOfStream);
@@ -103,13 +103,13 @@ impl Lexer {
 
   fn create_low_level_sequence(&mut self) -> Result<Token, LexerError> {
     let mut sequence: String = String::new();
-    let mut c: Option<char> = self.stream.peek()?;
+    let mut c: Option<char> = self.stream.peek();
     let mut dollars = 0;
 
     loop {
       if let Some(ch) = c {
         if ch == '$' {
-          self.stream.next()?;
+          self.stream.next();
           dollars += 1;
 
           if dollars == 2 {
@@ -122,8 +122,8 @@ impl Lexer {
           }
 
           sequence.push(ch);
-          self.stream.next()?;
-          c = self.stream.peek()?;
+          self.stream.next();
+          c = self.stream.peek();
         }
       }
     };
@@ -139,7 +139,7 @@ impl Lexer {
       return Ok(tok);
     };
 
-    let mut c: char = match self.stream.peek()? {
+    let mut c: char = match self.stream.peek() {
       Some(c) => c,
       None => {
         return Ok(None)
@@ -147,8 +147,8 @@ impl Lexer {
     };
 
     while c.is_whitespace() {
-      self.stream.next()?;
-      c = match self.stream.peek()? {
+      self.stream.next();
+      c = match self.stream.peek() {
         Some(c) => c,
         None => {
           return Ok(None)
@@ -161,19 +161,19 @@ impl Lexer {
         Ok(Some(self.create_ident_or_keyword()?))
       },
       '\'' => {
-        self.stream.next()?;
+        self.stream.next();
         Ok(Some(self.create_string_literal()?))
       },
       '-' | '|' | '.' => {
-        self.stream.next()?;
+        self.stream.next();
         Ok(Some(Token::Punctuation(c)))
       },
       '$' => {
-        self.stream.next()?;
+        self.stream.next();
 
-        if let Some(ch) = self.stream.peek()? {
+        if let Some(ch) = self.stream.peek() {
           if ch == '$' {
-            self.stream.next()?;
+            self.stream.next();
           } else {
             return Err(LexerError::UnexpectedCharacter(ch));
           }
@@ -196,20 +196,8 @@ impl Lexer {
   }
 }
 
-impl From<String> for Lexer {
-  fn from(s: String) -> Lexer {
-    Lexer::new(InputStream::from(s))
-  }
-}
-
-impl From<&str> for Lexer {
-  fn from(s: &str) -> Lexer {
-    Lexer::new(InputStream::from(s))
-  }
-}
-
-impl From<&[u8]> for Lexer {
-  fn from(s: &[u8]) -> Lexer {
-    Lexer::new(InputStream::from(s))
+impl<'s> From<&'s str> for Lexer<'s> {
+  fn from(s: &'s str) -> Lexer<'s> {
+    Lexer::new(InputStream::new(s))
   }
 }

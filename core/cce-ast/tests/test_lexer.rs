@@ -20,13 +20,10 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 
 use cce_ast::{Lexer, Token};
-use cce_stream::InputStream;
-use std::io::Cursor;
 
 #[test]
 fn test_lexer_basic() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"howto hello world");
-  let mut lexer = Lexer::new(InputStream::new(Box::new(contents)));
+  let mut lexer = Lexer::from("howto hello world");
 
   let next_token = lexer.next().unwrap().unwrap();
   assert_eq!(next_token, Token::Keyword("howto".to_string()));
@@ -40,8 +37,7 @@ fn test_lexer_basic() {
 
 #[test]
 fn test_lexer_string() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"howto 'hello world'");
-  let mut lexer = Lexer::new(InputStream::new(Box::new(contents)));
+  let mut lexer = Lexer::from("howto 'hello world'");
 
   let next_token = lexer.next().unwrap().unwrap();
   assert_eq!(next_token, Token::Keyword("howto".to_string()));
@@ -52,8 +48,7 @@ fn test_lexer_string() {
 
 #[test]
 fn test_lexer_punct() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"howto hello world\n- do it");
-  let mut lexer = Lexer::new(InputStream::new(Box::new(contents)));
+  let mut lexer = Lexer::from("howto hello world\n- do it");
 
   let next_token = lexer.next().unwrap().unwrap();
   assert_eq!(next_token, Token::Keyword("howto".to_string()));
@@ -76,8 +71,7 @@ fn test_lexer_punct() {
 
 #[test]
 fn test_lexer_peek() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"howto hello world");
-  let mut lexer = Lexer::new(InputStream::new(Box::new(contents)));
+  let mut lexer = Lexer::from("howto hello world");
 
   let next_token = lexer.peek().unwrap().unwrap();
   assert_eq!(next_token, Token::Keyword("howto".to_string()));
@@ -97,8 +91,7 @@ fn test_lexer_peek() {
 
 #[test]
 fn test_lexer_lowlevel() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"hello -$$ struct Foo { bar: u32 } $$.");
-  let mut lexer = Lexer::new(InputStream::new(Box::new(contents)));
+  let mut lexer = Lexer::from("hello -$$ struct Foo { bar: u32 } $$.");
 
   let next_token = lexer.next().unwrap().unwrap();
   assert_eq!(next_token, Token::Identifier("hello".to_string()));

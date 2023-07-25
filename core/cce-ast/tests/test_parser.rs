@@ -20,14 +20,10 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 
 use cce_ast::*;
-use cce_stream::InputStream;
-use std::io::Cursor;
-
 
 #[test]
 fn test_parser_basic() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"say hello world");
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from("say hello world");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::Command(Command {
@@ -44,8 +40,7 @@ fn test_parser_basic() {
 
 #[test]
 fn test_parser_literal() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"say 'hello world'");
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from("say 'hello world'");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::Command(Command {
@@ -61,8 +56,7 @@ fn test_parser_literal() {
 
 #[test]
 fn test_parser_modifier() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"say hello world | say hello world");
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from("say hello world | say hello world");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::Command(Command {
@@ -85,8 +79,7 @@ fn test_parser_modifier() {
 
 #[test]
 fn test_parser_modifier_multiple() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"say hello world | say hello world | say hello world");
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from("say hello world | say hello world | say hello world");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::Command(Command {
@@ -114,8 +107,7 @@ fn test_parser_modifier_multiple() {
 
 #[test]
 fn test_parser_howto() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"howto say hello world - say hello world | do not say goodbye");
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from("howto say hello world - say hello world | do not say goodbye");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::HowToStatement(HowToStatement {
@@ -148,8 +140,7 @@ fn test_parser_howto() {
 
 #[test]
 fn test_parser_howto_multiple() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"howto say hello world - say hello world | do not say goodbye - say hello world again");
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from("howto say hello world - say hello world | do not say goodbye - say hello world again");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::HowToStatement(HowToStatement {
@@ -191,8 +182,7 @@ fn test_parser_howto_multiple() {
 
 #[test]
 fn test_parser_whatis() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"whatis the world - a planet | in the universe");
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from("whatis the world - a planet | in the universe");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::WhatIsStatement(WhatIsStatement {
@@ -222,8 +212,7 @@ fn test_parser_whatis() {
 
 #[test]
 fn test_parser_whatis_multiple() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"whatis the world - a planet | in the universe - a planet in the solar system");
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from("whatis the world - a planet | in the universe - a planet in the solar system");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::WhatIsStatement(WhatIsStatement {
@@ -264,8 +253,7 @@ fn test_parser_whatis_multiple() {
 
 #[test]
 fn test_parser_howto_multiple_nomod() {
-  let contents: Cursor<&[u8]> = Cursor::new(b"howto say hello world - say hello world - say hello world again");
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from("howto say hello world - say hello world - say hello world again");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::HowToStatement(HowToStatement {

@@ -36,13 +36,13 @@ use cce_infer::Deducer;
 #[command(about = "The Circe Compiler", long_about = None)]
 #[command(version = "0.1.0")]
 #[command(author = "Carlos Kieliszewski")]
-struct CLI {
+struct Cli {
   filename: String
 }
 
 
 fn main() {
-  let cli = CLI::parse();
+  let cli = Cli::parse();
 
   let path: &Path = Path::new(&cli.filename);
   if !path.exists() {
@@ -52,6 +52,8 @@ fn main() {
   let mut file = File::open(path).unwrap();
   let mut contents = String::new();
   file.read_to_string(&mut contents).unwrap();
+
+  let contents = contents.as_str();
 
   let mut parser = Parser::from(contents);
   let mut nodes: Vec<ParseNode> = Vec::new();

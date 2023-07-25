@@ -20,14 +20,10 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 
 use cce_ast::*;
-use cce_stream::InputStream;
-use std::io::Cursor;
-
 
 #[test]
 fn test_parser_example_helloworld() {
-  let contents: Cursor<&[u8]> = Cursor::new(include_str!("./examples/hello.cce").as_bytes());
-  let mut parser = Parser::new(Lexer::new(InputStream::new(Box::new(contents))));
+  let mut parser = Parser::from(include_str!("./examples/hello.cce"));
 
   let expected_output = vec![
     ParseNode::Command(Command {

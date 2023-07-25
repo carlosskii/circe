@@ -24,8 +24,8 @@ use cce_llast::{ast::*, parse};
 
 use thiserror::Error;
 
-pub struct Parser {
-  pub(crate) lexer: Lexer,
+pub struct Parser<'s> {
+  pub(crate) lexer: Lexer<'s>,
   pub(crate) peeked: Option<ParseNode>
 }
 
@@ -78,8 +78,8 @@ pub enum ParserError {
 }
 
 
-impl Parser {
-  pub fn new(lexer: Lexer) -> Parser {
+impl<'s> Parser<'s> {
+  pub fn new(lexer: Lexer<'s>) -> Parser {
     Parser {
       lexer,
       peeked: None
@@ -315,20 +315,8 @@ impl Parser {
   }
 }
 
-impl From<String> for Parser {
-  fn from(s: String) -> Self {
-    Parser::new(Lexer::from(s))
-  }
-}
-
-impl From<&str> for Parser {
-  fn from(s: &str) -> Self {
-    Parser::new(Lexer::from(s))
-  }
-}
-
-impl From<&[u8]> for Parser {
-  fn from(s: &[u8]) -> Self {
-    Parser::new(Lexer::from(s))
+impl<'s> From<&'s str> for Parser<'s> {
+  fn from(data: &'s str) -> Self {
+    Parser::new(Lexer::from(data))
   }
 }
