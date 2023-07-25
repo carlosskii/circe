@@ -1,6 +1,6 @@
 <div align="center" style="margin-bottom: 4rem">
   <img
-    src="https://fs.cski.dev/assets/circelang.svg"
+    src="./assets/circelang.svg"
     alt="Circe Logo"
     height="128"
   />
