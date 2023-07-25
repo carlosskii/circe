@@ -1,11 +1,13 @@
 [workspace]
 members = [
   "core/cce-ast",
-  "lowlevel/cce-llast",
   "core/cce-stream",
+
+  "lowlevel/cce-llast",
 
   "inference/cce-infer",
   "inference/cce-infer-ast",
+  "inference/circelang-db",
 
   "ccec"
 ]
