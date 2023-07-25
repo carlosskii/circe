@@ -26,6 +26,11 @@ pub struct Deducer {
   pub(crate) nodes: Vec<ProgramNode>
 }
 
+impl Default for Deducer {
+  fn default() -> Self {
+    Self::new()
+  }
+}
 
 impl Deducer {
   pub fn new() -> Self {
@@ -57,7 +62,7 @@ impl Deducer {
     generated.into_boxed_slice()
   } */
 
-  pub fn deduce<'a>(&self) -> Vec<ProgramNode> {
+  pub fn deduce(&self) -> Vec<ProgramNode> {
     let infer_nodes: Vec<ProgramNode> = self.full_infer();
     // self.full_compile(infer_nodes)
 

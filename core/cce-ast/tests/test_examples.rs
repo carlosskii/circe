@@ -84,12 +84,9 @@ fn test_parser_example_helloworld() {
   ];
 
   let mut output: Vec<ParseNode> = Vec::new();
-  loop {
-    match parser.next().unwrap() {
-      Some(node) => output.push(node),
-      None => break
-    }
-  };
+  while let Some(node) = parser.next().unwrap() {
+    output.push(node)
+  }
 
   assert_eq!(output, expected_output);
 }

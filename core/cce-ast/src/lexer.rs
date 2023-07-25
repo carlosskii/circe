@@ -59,15 +59,11 @@ impl Lexer {
     let mut ident = String::new();
     let mut c: Option<char> = self.stream.peek()?;
 
-    loop {
-      if let Some(ch) = c {
-        if ch.is_alphanumeric() || ch == '_' {
-          ident.push(ch);
-          self.stream.next()?;
-          c = self.stream.peek()?;
-        } else {
-          break;
-        }
+    while let Some(ch) = c {
+      if ch.is_alphanumeric() || ch == '_' {
+        ident.push(ch);
+        self.stream.next()?;
+        c = self.stream.peek()?;
       } else {
         break;
       }
@@ -135,6 +131,7 @@ impl Lexer {
     Ok(Token::LowLevelSequence(sequence))
   }
 
+  // TODO: Move this to an iterator
   pub fn next(&mut self) -> Result<Option<Token>, LexerError> {
     if self.peeked.is_some() {
       let tok = self.peeked.clone();

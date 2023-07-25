@@ -29,12 +29,9 @@ fn test_infer_basic() {
   let mut parser: ast::Parser = ast::Parser::from("print 'Hello, world!' to the console.");
 
   let mut parse_nodes: Vec<ast::ParseNode> = Vec::new();
-  loop {
-    match parser.next().unwrap() {
-      Some(node) => parse_nodes.push(node),
-      None => break
-    }
-  };
+  while let Some(node) = parser.next().unwrap() {
+    parse_nodes.push(node);
+  }
 
   let infer_ast: Vec<ProgramNode> = convert(parse_nodes);
 

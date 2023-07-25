@@ -18,7 +18,6 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-use syn;
 
 pub mod ast;
 

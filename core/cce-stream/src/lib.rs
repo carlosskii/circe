@@ -19,7 +19,7 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 */
 
 
-use std::{io::{Read, Seek, Cursor}};
+use std::io::{Read, Seek, Cursor};
 
 use thiserror::Error;
 
@@ -95,6 +95,7 @@ impl InputStream {
     Ok(Some(c))
   }
 
+  // TODO: Move to iterator trait
   pub fn next(&mut self) -> Result<Option<char>, InputStreamError> {
     if self.peeked.is_some() {
       let c = self.peeked;

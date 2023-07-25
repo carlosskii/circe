@@ -91,32 +91,28 @@ impl Parser {
 
     let mut tok: Option<Token> = self.lexer.peek()?;
 
-    loop {
-      if let Some(token) = tok.clone() {
-        match token {
-          Token::Identifier(ident) => {
-            components.push(CommandComponent::Keyword(ident));
-          },
-          Token::Keyword(kw) => {
-            components.push(CommandComponent::Keyword(kw));
-          },
-          Token::Literal(lit) => {
-            components.push(CommandComponent::Literal(lit));
-          },
-          Token::Punctuation(_) => {
-            break;
-          },
-          Token::LowLevelSequence(_) => {
-            return Err(ParserError::SyntaxError("Low level sequences are not allowed here".to_string()));
-          },
-        }
-
-        self.lexer.next()?;
-        tok = self.lexer.peek()?;
-      } else {
-        break;
+    while let Some(token) = tok.clone() {
+      match token {
+        Token::Identifier(ident) => {
+          components.push(CommandComponent::Keyword(ident));
+        },
+        Token::Keyword(kw) => {
+          components.push(CommandComponent::Keyword(kw));
+        },
+        Token::Literal(lit) => {
+          components.push(CommandComponent::Literal(lit));
+        },
+        Token::Punctuation(_) => {
+          break;
+        },
+        Token::LowLevelSequence(_) => {
+          return Err(ParserError::SyntaxError("Low level sequences are not allowed here".to_string()));
+        },
       }
-    };
+
+      self.lexer.next()?;
+      tok = self.lexer.peek()?;
+    }
 
     Ok(components)
   }
@@ -268,6 +264,7 @@ impl Parser {
     })
   }
 
+  // TODO: Move this to an iterator
   pub fn next(&mut self) -> Result<Option<ParseNode>, ParserError> {
     if self.peeked.is_some() {
       let peeked: Option<ParseNode> = self.peeked.clone();

@@ -52,7 +52,7 @@ pub struct LLFunction {
 impl From<syn::ItemFn> for LLFunction {
   fn from(item: syn::ItemFn) -> Self {
     let name = item.sig.ident.to_string();
-    let args = item.sig.inputs.iter().map(|arg| LLArgument::from(arg)).collect();
+    let args = item.sig.inputs.iter().map(LLArgument::from).collect();
     let ret = LLType::from(&item.sig.output);
 
     LLFunction { name, args, ret }
@@ -71,9 +71,9 @@ pub struct LLStruct {
 impl From<syn::ItemStruct> for LLStruct {
   fn from(item: syn::ItemStruct) -> Self {
     let name = item.ident.to_string();
-    let fields: Vec<LLStructField> = item.fields.iter().map(|field| LLStructField::from(field)).collect();
+    let fields: Vec<LLStructField> = item.fields.iter().map(LLStructField::from).collect();
 
-    if fields.len() == 0 {
+    if fields.is_empty() {
       panic!("Structs must have at least one field");
     }
 

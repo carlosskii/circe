@@ -21,7 +21,7 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 use cce_infer_ast::ProgramNode;
 
-pub fn infer_pass(nodes: &Vec<ProgramNode>) -> (Vec<ProgramNode>, bool) {
+pub fn infer_pass(nodes: &[ProgramNode]) -> (Vec<ProgramNode>, bool) {
   let changed: bool = false;
   let mut result: Vec<ProgramNode> = Vec::new();
 
@@ -29,5 +29,5 @@ pub fn infer_pass(nodes: &Vec<ProgramNode>) -> (Vec<ProgramNode>, bool) {
     result.push(node.clone());
   }
 
-  return (result, changed);
+  (result, changed)
 }
