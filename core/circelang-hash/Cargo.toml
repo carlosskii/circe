@@ -1,0 +1,7 @@
+[package]
+name = "circelang-hash"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+circelang-hash-proc = { version = "0.0.1", path = "../circelang-hash-proc" }

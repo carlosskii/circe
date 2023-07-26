@@ -21,6 +21,7 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 
 use crate::lexer::{Lexer, Token, LexerError};
 use cce_llast::{ast::*, parse};
+use circelang_hash::CirceHash;
 
 use thiserror::Error;
 
@@ -29,38 +30,38 @@ pub struct Parser<'s> {
   pub(crate) peeked: Option<ParseNode>
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, CirceHash)]
 pub enum ParseNode {
   Command(Command),
   HowToStatement(HowToStatement),
   WhatIsStatement(WhatIsStatement)
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, CirceHash)]
 pub struct Command {
   pub components: Vec<CommandComponent>,
   pub modifiers: Vec<Vec<CommandComponent>>
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, CirceHash)]
 pub enum CommandComponent {
   Literal(String),
   Keyword(String)
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, CirceHash)]
 pub struct HowToStatement {
   pub signature: Vec<CommandComponent>,
   pub body: Vec<HowToCommand>
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, CirceHash)]
 pub enum HowToCommand {
   HighLevel(Command),
   LowLevel(Vec<LLTopStatement>)
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, CirceHash)]
 pub struct WhatIsStatement {
   pub signature: Vec<CommandComponent>,
   pub body: Vec<Command>

@@ -2,6 +2,8 @@
 members = [
   "core/cce-ast",
   "core/cce-stream",
+  "core/circelang-hash",
+  "core/circelang-hash-proc",
 
   "lowlevel/cce-llast",
 
