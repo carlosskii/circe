@@ -109,6 +109,15 @@ impl<'s> Parser<'s> {
         Token::LowLevelSequence(_) => {
           return Err(ParserError::SyntaxError("Low level sequences are not allowed here".to_string()));
         },
+        Token::Newline => {
+          break;
+        },
+        Token::Question => {
+          break;
+        },
+        Token::Dot => {
+          break;
+        }
       }
 
       self.lexer.next()?;
@@ -136,14 +145,18 @@ impl<'s> Parser<'s> {
             '-' => {
               break;
             },
-            '.' => {
-              self.lexer.next()?;
-              break;
-            },
             _ => {
               return Err(ParserError::SyntaxError("Expected '|'".to_string()));
             }
           }
+        },
+        Token::Dot => {
+          self.lexer.next()?;
+          break;
+        },
+        Token::Newline => {
+          self.lexer.next()?;
+          tok = self.lexer.peek()?;
         },
         _ => {
           break;
@@ -181,6 +194,19 @@ impl<'s> Parser<'s> {
 
   fn parse_howto_statement(&mut self) -> Result<HowToStatement, ParserError> {
     let signature: Vec<CommandComponent> = self.parse_vec_command_component()?;
+
+    if self.lexer.peek()? != Some(Token::Question) {
+      return Err(ParserError::SyntaxError("Expected '?'".to_string()));
+    }
+
+    self.lexer.next()?;
+
+    if self.lexer.peek()? != Some(Token::Newline) {
+      return Err(ParserError::SyntaxError("Expected newline".to_string()));
+    }
+
+    self.lexer.next()?;
+
     let mut body: Vec<HowToCommand> = Vec::new();
 
     let mut tok: Option<Token> = self.lexer.peek()?;
@@ -207,7 +233,7 @@ impl<'s> Parser<'s> {
         Some(Token::Punctuation('-')) => {
           self.lexer.next()?;
         },
-        Some(Token::Punctuation('.')) => {
+        Some(Token::Dot) => {
           self.lexer.next()?;
           break;
         },
@@ -226,6 +252,19 @@ impl<'s> Parser<'s> {
 
   fn parse_whatis_statement(&mut self) -> Result<WhatIsStatement, ParserError> {
     let signature: Vec<CommandComponent> = self.parse_vec_command_component()?;
+
+    if self.lexer.peek()? != Some(Token::Question) {
+      return Err(ParserError::SyntaxError("Expected '?'".to_string()));
+    }
+
+    self.lexer.next()?;
+
+    if self.lexer.peek()? != Some(Token::Newline) {
+      return Err(ParserError::SyntaxError("Expected newline".to_string()));
+    }
+
+    self.lexer.next()?;
+
     let mut body: Vec<Command> = Vec::new();
 
     let mut tok: Option<Token> = self.lexer.peek()?;
@@ -252,6 +291,25 @@ impl<'s> Parser<'s> {
         Some(Token::Punctuation('-')) => {
           self.lexer.next()?;
         },
+        Some(Token::Newline) => {
+          self.lexer.next()?;
+
+          match self.lexer.peek()? {
+            Some(Token::Newline) => {
+              self.lexer.next()?;
+              break;
+            },
+            Some(Token::Punctuation('-')) => {
+              self.lexer.next()?;
+            },
+            None => {
+              break;
+            },
+            _ => {
+              return Err(ParserError::SyntaxError("Expected newline or '-'".to_string()));
+            }
+          }
+        },
         Some(Token::Punctuation(_)) => {
           return Err(ParserError::SyntaxError("Expected '-'".to_string()));
         },
@@ -273,12 +331,22 @@ impl<'s> Parser<'s> {
       return Ok(peeked);
     }
 
-    let token: Token = match self.lexer.peek()? {
+    let mut token: Token = match self.lexer.peek()? {
       Some(tok) => tok,
       None => {
         return Ok(None);
       }
     };
+
+    while token == Token::Newline {
+      self.lexer.next()?;
+      token = match self.lexer.peek()? {
+        Some(tok) => tok,
+        None => {
+          return Ok(None);
+        }
+      };
+    }
 
     match token {
       Token::Keyword(kw) => {

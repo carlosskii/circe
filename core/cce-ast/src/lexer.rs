@@ -33,7 +33,10 @@ pub enum Token {
   Keyword(String),
   Literal(String),
   Punctuation(char),
-  LowLevelSequence(String)
+  LowLevelSequence(String),
+  Newline,
+  Question,
+  Dot
 }
 
 #[derive(Error, Debug)]
@@ -146,7 +149,7 @@ impl<'s> Lexer<'s> {
       }
     };
 
-    while c.is_whitespace() {
+    while c.is_whitespace() && c != '\n' {
       self.stream.next();
       c = match self.stream.peek() {
         Some(c) => c,
@@ -164,9 +167,17 @@ impl<'s> Lexer<'s> {
         self.stream.next();
         Ok(Some(self.create_string_literal()?))
       },
-      '-' | '|' | '.' => {
+      '-' | '|' => {
         self.stream.next();
         Ok(Some(Token::Punctuation(c)))
+      },
+      '.' => {
+        self.stream.next();
+        Ok(Some(Token::Dot))
+      },
+      '?' => {
+        self.stream.next();
+        Ok(Some(Token::Question))
       },
       '$' => {
         self.stream.next();
@@ -180,6 +191,10 @@ impl<'s> Lexer<'s> {
         }
 
         Ok(Some(self.create_low_level_sequence()?))
+      },
+      '\n' => {
+        self.stream.next();
+        Ok(Some(Token::Newline))
       },
       _ => {
         Err(LexerError::UnexpectedCharacter(c))

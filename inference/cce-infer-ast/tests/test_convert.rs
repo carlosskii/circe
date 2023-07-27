@@ -122,7 +122,7 @@ fn test_convert_multiple_commands() {
 
 #[test]
 fn test_convert_howto() {
-  let mut parser: Parser = Parser::from("howto print a string - write the string.");
+  let mut parser: Parser = Parser::from("howto print a string?\n- write the string");
 
   let mut parse_nodes: Vec<ParseNode> = Vec::new();
   while let Some(node) = parser.next().unwrap() {
@@ -156,7 +156,7 @@ fn test_convert_howto() {
 
 #[test]
 fn test_convert_howto_modifiers() {
-  let mut parser: Parser = Parser::from("howto print a string - write the string | add a newline.");
+  let mut parser: Parser = Parser::from("howto print a string?\n- write the string | add a newline");
 
   let mut parse_nodes: Vec<ParseNode> = Vec::new();
   while let Some(node) = parser.next().unwrap() {
@@ -196,7 +196,7 @@ fn test_convert_howto_modifiers() {
 
 #[test]
 fn test_convert_whatis() {
-  let mut parser: Parser = Parser::from("whatis a string - a sequence of characters.");
+  let mut parser: Parser = Parser::from("whatis a string?\n- a sequence of characters");
 
   let mut parse_nodes: Vec<ParseNode> = Vec::new();
   while let Some(node) = parser.next().unwrap() {

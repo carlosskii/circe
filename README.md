@@ -46,22 +46,22 @@ print 'Hello, world!' to the console.
 ### Hello, world! (Behind the scenes)
 
 ```circe
-howto print a string to the console
+howto print a string to the console?
 - write the string to stdout
-- add a newline.
+- add a newline
 
-whatis stdout
-- the output stream of the console.
+whatis stdout?
+- the output stream of the console
 
-whatis a stream
+whatis a stream?
 - a readable or writable sequence of bytes
-| these are represented by integer IDs on Linux.
+| these are represented by integer IDs on Linux
 
-howto write a string to a stream
+howto write a string to a stream?
 - run a 'WRITE' system call
 | the first argument is the ID of the stream
 | the second argument is the address of the string
-| the third argument is the length of the string.
+| the third argument is the length of the string
 
 ...
 ```

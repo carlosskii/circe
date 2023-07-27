@@ -64,7 +64,7 @@ fn test_parser_example_helloworld() {
     }),
     ParseNode::WhatIsStatement(WhatIsStatement {
       signature: vec![
-        CommandComponent::Keyword("stdout".to_string())
+        CommandComponent::Literal("stdout".to_string())
       ],
       body: vec![
         Command {

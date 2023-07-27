@@ -60,6 +60,9 @@ fn test_lexer_punct() {
   assert_eq!(next_token, Token::Identifier("world".to_string()));
 
   let next_token = lexer.next().unwrap().unwrap();
+  assert_eq!(next_token, Token::Newline);
+
+  let next_token = lexer.next().unwrap().unwrap();
   assert_eq!(next_token, Token::Punctuation('-'));
 
   let next_token = lexer.next().unwrap().unwrap();

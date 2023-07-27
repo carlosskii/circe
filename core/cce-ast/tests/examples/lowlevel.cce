@@ -1,7 +1,7 @@
-write 'Hello, world!' to stdout.
+write 'Hello, world!' to stdout
 
 
-howto write a string to a file descriptor
+howto write a string to a file descriptor?
 -*
 
 < run the 'write' system call

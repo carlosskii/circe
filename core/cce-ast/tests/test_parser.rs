@@ -107,7 +107,7 @@ fn test_parser_modifier_multiple() {
 
 #[test]
 fn test_parser_howto() {
-  let mut parser = Parser::from("howto say hello world - say hello world | do not say goodbye");
+  let mut parser = Parser::from("howto say hello world?\n- say hello world\n| do not say goodbye");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::HowToStatement(HowToStatement {
@@ -140,7 +140,7 @@ fn test_parser_howto() {
 
 #[test]
 fn test_parser_howto_multiple() {
-  let mut parser = Parser::from("howto say hello world - say hello world | do not say goodbye - say hello world again");
+  let mut parser = Parser::from("howto say hello world?\n- say hello world\n| do not say goodbye\n- say hello world again");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::HowToStatement(HowToStatement {
@@ -182,7 +182,7 @@ fn test_parser_howto_multiple() {
 
 #[test]
 fn test_parser_whatis() {
-  let mut parser = Parser::from("whatis the world - a planet | in the universe");
+  let mut parser = Parser::from("whatis the world?\n- a planet\n| in the universe");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::WhatIsStatement(WhatIsStatement {
@@ -212,7 +212,7 @@ fn test_parser_whatis() {
 
 #[test]
 fn test_parser_whatis_multiple() {
-  let mut parser = Parser::from("whatis the world - a planet | in the universe - a planet in the solar system");
+  let mut parser = Parser::from("whatis the world?\n- a planet\n| in the universe\n- a planet in the solar system");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::WhatIsStatement(WhatIsStatement {
@@ -253,7 +253,7 @@ fn test_parser_whatis_multiple() {
 
 #[test]
 fn test_parser_howto_multiple_nomod() {
-  let mut parser = Parser::from("howto say hello world - say hello world - say hello world again");
+  let mut parser = Parser::from("howto say hello world?\n- say hello world\n- say hello world again");
 
   let next_node: ParseNode = parser.next().unwrap().unwrap();
   let expected_node: ParseNode = ParseNode::HowToStatement(HowToStatement {

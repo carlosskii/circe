@@ -1,8 +1,9 @@
 print 'Hello, world!' to the console.
 
-howto print a string to the console
+howto print a string to the console?
 - write the string to stdout
-| add a newline.
+| add a newline
 
-whatis stdout
-- a file stream.
+whatis 'stdout'?
+- a file stream
+
