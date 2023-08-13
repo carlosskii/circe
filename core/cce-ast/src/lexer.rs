@@ -36,7 +36,8 @@ pub enum Token {
   LowLevelSequence(String),
   Newline,
   Question,
-  Dot
+  Dot,
+  Percent
 }
 
 #[derive(Error, Debug)]
@@ -174,6 +175,10 @@ impl<'s> Lexer<'s> {
       '.' => {
         self.stream.next();
         Ok(Some(Token::Dot))
+      },
+      '%' => {
+        self.stream.next();
+        Ok(Some(Token::Percent))
       },
       '?' => {
         self.stream.next();

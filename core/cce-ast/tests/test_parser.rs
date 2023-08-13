@@ -285,3 +285,27 @@ fn test_parser_howto_multiple_nomod() {
 
   assert_eq!(next_node, expected_node);
 }
+
+#[test]
+fn test_parser_slot() {
+  let mut parser = Parser::from("read %hello.");
+
+  let next_node: ParseNode = parser.next().unwrap().unwrap();
+  let expected_node: ParseNode = ParseNode::Command(Command {
+    components: vec![
+      CommandComponent::Keyword("read".to_string()),
+      CommandComponent::Slot("hello".to_string())
+    ],
+    modifiers: vec![]
+  });
+
+  assert_eq!(next_node, expected_node);
+}
+
+#[test]
+#[should_panic]
+fn test_parser_openslot() {
+  let mut parser = Parser::from("read %");
+
+  parser.next().unwrap().unwrap();
+}

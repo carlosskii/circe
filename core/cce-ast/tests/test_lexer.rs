@@ -116,3 +116,14 @@ fn test_lexer_open_string() {
   
   lexer.next().unwrap().unwrap();
 }
+
+#[test]
+fn test_lexer_slot() {
+  let mut lexer = Lexer::from("%hello");
+
+  let next_token = lexer.next().unwrap().unwrap();
+  assert_eq!(next_token, Token::Percent);
+
+  let next_token = lexer.next().unwrap().unwrap();
+  assert_eq!(next_token, Token::Identifier("hello".to_string()));
+}

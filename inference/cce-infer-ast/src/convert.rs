@@ -40,7 +40,8 @@ fn convert_command(command: ast::Command) -> CommandNode {
 fn convert_command_component(component: ast::CommandComponent) -> CommandComponent {
   match component {
     ast::CommandComponent::Literal(literal) => CommandComponent::Literal(literal),
-    ast::CommandComponent::Keyword(keyword) => CommandComponent::Keyword(keyword)
+    ast::CommandComponent::Keyword(keyword) => CommandComponent::Keyword(keyword),
+    ast::CommandComponent::Slot(slot) => CommandComponent::Slot(slot)
   }
 }
 

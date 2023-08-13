@@ -54,5 +54,6 @@ pub enum HowToCommand {
 #[derive(Debug, Clone, PartialEq)]
 pub enum CommandComponent {
   Literal(String),
-  Keyword(String)
+  Keyword(String),
+  Slot(String)
 }

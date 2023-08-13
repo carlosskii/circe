@@ -46,7 +46,8 @@ pub struct Command {
 #[derive(Debug, Clone, PartialEq, CirceHash)]
 pub enum CommandComponent {
   Literal(String),
-  Keyword(String)
+  Keyword(String),
+  Slot(String)
 }
 
 #[derive(Debug, Clone, PartialEq, CirceHash)]
@@ -102,6 +103,16 @@ impl<'s> Parser<'s> {
         },
         Token::Literal(lit) => {
           components.push(CommandComponent::Literal(lit));
+        },
+        Token::Percent => {
+          self.lexer.next()?;
+          tok = self.lexer.peek()?;
+
+          if let Some(Token::Identifier(ident)) = tok {
+            components.push(CommandComponent::Slot(ident));
+          } else {
+            return Err(ParserError::SyntaxError("Expected identifier".to_string()));
+          }
         },
         Token::Punctuation(_) => {
           break;
