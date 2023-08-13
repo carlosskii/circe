@@ -27,3 +27,10 @@ pub use parser::{
   CommandComponent, HowToStatement, WhatIsStatement,
   HowToCommand
 };
+
+pub mod ast {
+  pub use crate::{
+    Command, CommandComponent, HowToStatement,
+    WhatIsStatement, HowToCommand
+  };
+}

@@ -19,11 +19,14 @@ Circe. If not, see <https://www.gnu.org/licenses/>.
 */
 
 use std::collections::HashMap;
+use circelang_hash::CirceHash;
+
+mod impls;
 
 
 pub struct Database {
-    entries: Vec<(String, String)>,
-    lookup: HashMap<String, Vec<u64>>
+    entries: Vec<(u64, String)>,
+    lookup: HashMap<u64, Vec<u64>>
 }
 
 impl Database {
@@ -39,4 +42,9 @@ impl Default for Database {
     fn default() -> Self {
         Self::new()
     }
+}
+
+pub trait DatabaseObject {
+    fn get_lookups(&self) -> Vec<u64>;
+    fn get_conversion(&self) -> String;
 }
