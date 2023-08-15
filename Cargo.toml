@@ -11,5 +11,6 @@ members = [
   "inference/cce-infer-ast",
   "inference/circelang-db",
 
+  "bytecode",
   "ccec"
 ]
